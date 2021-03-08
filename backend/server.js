@@ -10,7 +10,7 @@ const passport = require("passport");
 const db = require("./config/keys").mongoURI;
 
 const app = express();
-const exercisesRouter = require('./routes/exercises');
+
 const usersRouter = require('./routes/users');
 
 
@@ -33,8 +33,6 @@ app.use(passport.initialize());
 require("./config/passport")(passport);
 
 
-
-app.use('/exercises', exercisesRouter);
 app.use('/users', usersRouter);
 
 app.listen(port, () => {

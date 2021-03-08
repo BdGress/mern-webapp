@@ -12,6 +12,7 @@ import Navbar from "./components/navbar.component";
 import Landing from "./components/landing.component";
 import Register from "./components/register.component";
 import Login from "./components/login.component";
+import heroku from "./components/create-heroku.component";
 import PrivateRoute from "./components/private-route.component";
 import Dashboard from "./components/dashboard.component";
 

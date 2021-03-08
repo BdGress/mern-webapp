@@ -15,22 +15,9 @@ router.route('/').get((req, res) => {
     .then(users => res.json(users))
     .catch(err => res.status(400).json('Error: ' + err));
 });
-/*
-//adds new user
-router.route('/add').post((req, res) => {
-  const username = req.body.username;
 
-  const newUser = new User({
-    username
-  });
-
-  newUser.save()
-    .then(() => res.json('User added!'))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
-*/
 //get specific user object by objectID
-router.route('/ID/:id').get((req, res) => {
+router.route('/id/:id').get((req, res) => {
   User.findById(req.params.id)
     .then(users => res.json(users))
     .catch(err => res.status(400).json('Error: ' + err));
@@ -66,6 +53,17 @@ router.route('/userChallenges/:name').post((req, res) => {
     
 });
 
+//Update user with URL
+router.route('/url/:id').post((req,res) =>{
+  User.findById(req.params.id)
+  .then(user => {
+    user.url = req.body.url;
+    user.save()
+    .then(() => res.json('User url updated!'))
+    .catch(err => res.status(400).json('Error: '+ err));
+  })
+  .catch(err => res.status(400).json('Error: '+ err));
+});
 
 // @route POST users/register
 // @desc Register user

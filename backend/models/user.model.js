@@ -25,6 +25,13 @@ const UserSchema = new Schema({
     trim: true,
     minlength: 3
   },
+  url: {
+    type: String,
+    required: false,
+    unique: true,
+    trim: true,
+    minlength: 3
+  },
   challenges: [Challenge]
 }, {
   timestamps: true,

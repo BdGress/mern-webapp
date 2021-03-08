@@ -16,13 +16,12 @@ export default class CreateHeroku extends Component {
   }
 
 
- createHerokuDeployment(username){
+ createHerokuDeployment(){
 
     heroku.request({
         method: 'POST',
         path: '/app-setups',
         body: {
-            "app":{"name":username,"region":"us"},
             "source_blob": {"url":"https://api.github.com/repos/BdGress/VirtualHackathon/tarball/master"}
         },
         parseJSON: false
