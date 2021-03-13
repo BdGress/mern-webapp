@@ -51,23 +51,19 @@ this.props.registerUser(newUser, this.props.history);
 render() {
     const { errors } = this.state;
 return (
-      <div className="container">
-        <div className="row">
-          <div className="col s8 offset-s2">
-            <Link to="/" className="btn-flat waves-effect">
-              <i className="material-icons left">keyboard_backspace</i> Back to
-              home
-            </Link>
-            <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+      <div>
+        <div>
+          <div>
+            <div>
               <h4>
                 <b>Register</b> below
               </h4>
-              <p className="grey-text text-darken-1">
+              <p>
                 Already have an account? <Link to="/login">Log in</Link>
               </p>
             </div>
             <form noValidate onSubmit={this.onSubmit}>
-              <div className="input-field col s12">
+              <div>
                 <input
                   onChange={this.onChange}
                   value={this.state.name}
@@ -81,7 +77,7 @@ return (
                 <label htmlFor="name">Name</label>
                 <span className="red-text">{errors.name}</span>
               </div>
-              <div className="input-field col s12">
+              <div>
                 <input
                   onChange={this.onChange}
                   value={this.state.email}
@@ -93,9 +89,9 @@ return (
                   })}
                 />
                 <label htmlFor="email">Email</label>
-                <span className="red-text">{errors.email}</span>
+                <span>{errors.email}</span>
               </div>
-              <div className="input-field col s12">
+              <div>
                 <input
                   onChange={this.onChange}
                   value={this.state.password}
@@ -107,9 +103,9 @@ return (
                   })}
                 />
                 <label htmlFor="password">Password</label>
-                <span className="red-text">{errors.password}</span>
+                <span>{errors.password}</span>
               </div>
-              <div className="input-field col s12">
+              <div>
                 <input
                   onChange={this.onChange}
                   value={this.state.password2}
@@ -121,9 +117,9 @@ return (
                   })}
                 />
                 <label htmlFor="password2">Confirm Password</label>
-                <span className="red-text">{errors.password2}</span>
+                <span>{errors.password2}</span>
               </div>
-              <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+              <div>
                 <button
                   style={{
                     width: "150px",
