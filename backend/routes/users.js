@@ -5,56 +5,132 @@ const keys = require("../config/keys");
 let User = require('../models/user.model');
 let Challenge = require('../models/challenge.model');
 
+
+const auth = require('../middleware/auth');
+
+
 // Load input validation
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
+const e = require('express');
 
 //get all users
-router.route('/').get((req, res) => {
+router.get('/',auth,function(req,res) {
   User.find()
     .then(users => res.json(users))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 //get specific user object by objectID
-router.route('/id/:id').get((req, res) => {
+//router.route('/id/:id').get((req, res) => {
+  router.get('/id/:id',auth,function(req,res){
   User.findById(req.params.id)
     .then(users => res.json(users))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 //get challenges from specific user by Name
-router.route('/name/:name').get((req, res) => {
+//router.route('/name/:name').get((req, res) => {
+  router.get('/name/:name',auth,function(req,res){
   User.findOne({username:req.params.name})
     .then(user => res.json(user.challenges)) 
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-//add challenges to specific user
-router.route('/userChallenges/:name').post((req, res) => {
-  User.findOne({username:req.params.name})
-  .then(user => {
+//get challenges from specific user by Name
+//router.route('/getChallenges/:id').get((req, res) => {
+  router.get('/getChallenges/:id',auth,function(req,res){
+  User.findById(req.params.id)
+    .then(user => res.json(user.challenges)) 
+    .catch(err => res.status(400).json('Error: ' + err));
+});
 
-    //user.challenges.set(0,req.body.challengeName)
-    //user.challenges.push(req.body.challengeName)
+//update isBuilding to user
+//router.route('/isBuilding/:id').post((req,res) => {
+  router.post('/isBuilding/:id',auth,function(req,res){
+  User.findById(req.params.id)
+  .then(user => {
+    user.isBuilding = req.body.isBuilding;
+
+    user.save()
+        .then(() => res.json("Build Id Updated"))
+        .catch(err => res.status(400).json('Error: ' + err));
+  })
+})
+
+//update buildID to user
+//router.route('/setupID/:id').post((req, res) => {
+  router.post('/setupID/:id',auth,function(req,res){
+  User.findById(req.params.id)
+    .then(user => {
+      user.setupID = req.body.setupID;
+
+      user.save()
+        .then(() => res.json("Build Id Updated"))
+        .catch(err => res.status(400).json('Error: ' + err));
+    }) 
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
+//add challenges to specific user
+//router.route('/addChallenge/:id').post((req, res) => {
+  router.post('/addChallenge/:id',auth,function(req,res){
+
+  User.findById(req.params.id)
+  .then(user => {
+    var challengeArray = [];
+
     const challengeName = req.body.challengeName;
     const challengeSuccess = req.body.challengeSuccess;
 
-    user.challenges.push(new Challenge ({
-      challengeName: challengeName,
-      challengeSuccess: challengeSuccess
-    }))
-  
-    user.save()
-        .then(() => res.json(user.challenges))
-        .catch(err => res.status(400).json('Error: ' + err));
+    challengeArray = user.challenges.map(challenge => challenge.challengeName)
+
+    if(!(challengeArray.includes(challengeName))){
+      user.challenges.push(new Challenge ({
+        challengeName: challengeName,
+        challengeSuccess: challengeSuccess
+      }))
+    
+      user.save()
+          .then(() => res.json('Challenge Added!'))
+          .catch(err => res.status(400).json('Error: ' + err));
+    }else{
+      res.json('Challenge Already Exists!')
+    }
+
     })
     .catch(err => res.status(400).json('Error: ' + err));
     
 });
 
+//Update Challenges to User
+//router.route('/updateChallenge/:id').post((req, res) => {
+  router.post('/updateChallenge/:id',auth,function(req,res){
+
+  User.findById(req.params.id)
+  .then(user => {
+    var i;
+    for (i = 0; i < user.challenges.length; i++) {
+    
+      if(user.challenges[i].challengeName == req.body.challengeName){
+         
+          user.challenges[i].challengeSuccess = req.body.challengeSuccess
+      
+          user.save()
+              .then(() => res.json('Challenge Updated!'))
+              .catch(err => res.status(400).json('Error: ' + err));
+      }else{}
+    }
+    
+    })
+    .catch(err => res.status(400).json('Error: ' + err));
+    
+});
+
+
 //Update user with URL
-router.route('/url/:id').post((req,res) =>{
+//router.route('/userURL/:id').post((req,res) =>{
+  router.post('/userURL/:id',auth,function(req,res){
   User.findById(req.params.id)
   .then(user => {
     user.url = req.body.url;

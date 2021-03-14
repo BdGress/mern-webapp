@@ -12,6 +12,7 @@ const db = require("./config/keys").mongoURI;
 const app = express();
 
 const usersRouter = require('./routes/users');
+const herokuRouter = require('./routes/heroku');
 
 
 const port = process.env.PORT || 5000;
@@ -34,6 +35,7 @@ require("./config/passport")(passport);
 
 
 app.use('/users', usersRouter);
+app.use('/heroku', herokuRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);

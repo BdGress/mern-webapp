@@ -8,13 +8,11 @@ import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { Provider } from "react-redux";
 import store from "./store";
 
-import Navbar from "./components/navbar.component";
-import Landing from "./components/landing.component";
-import Register from "./components/register.component";
-import Login from "./components/login.component";
-import heroku from "./components/create-heroku.component";
-import PrivateRoute from "./components/private-route.component";
-import Dashboard from "./components/dashboard.component";
+import Navbar from "./components/navbar";
+import Register from "./components/register";
+import Login from "./components/login";
+import PrivateRoute from "./components/privateRoute";
+import Dashboard from "./components/dashboard";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -42,9 +40,9 @@ class App extends Component {
         <Router>
           <div className="App">
             <Navbar />
-            <Route exact path="/" component={Landing} />
+            <Route exact path="/" component={Login} />
             <Route exact path="/register" component={Register} />
-            <Route exact path="/login" component={Login} />
+            
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
             </Switch>

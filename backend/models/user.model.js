@@ -25,6 +25,16 @@ const UserSchema = new Schema({
     trim: true,
     minlength: 3
   },
+  isBuilding: {
+    type: Boolean,
+    required: false,
+  },
+  setupID: {
+    type: String,
+    required: false,
+    unique: false,
+    trim: true
+  },
   url: {
     type: String,
     required: false,

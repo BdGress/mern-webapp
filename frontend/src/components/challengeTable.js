@@ -31,7 +31,7 @@ class ChallengeTable extends Component {
 
         interval: setInterval(() => {
             this.getData();
-          }, 5000)
+          }, 20000)
 
         })
       }

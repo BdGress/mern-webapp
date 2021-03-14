@@ -59,9 +59,6 @@ return (
               <h4>
                 <b>Login below</b> 
               </h4>
-              <p className="grey-text text-darken-1">
-                Don't have an account? <Link to="/register">Register</Link>
-              </p>
             </div>
             <form noValidate onSubmit={this.onSubmit}>
               <div className="input-field col s12">
@@ -102,6 +99,10 @@ return (
                 <button>
                   Login
                 </button>
+
+                <p className="grey-text text-darken-1">
+                Don't have an account? <Link to="/register">Register</Link>
+              </p>
               </div>
             </form>
           </div>

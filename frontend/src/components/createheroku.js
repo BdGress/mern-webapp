@@ -13,6 +13,8 @@ class CreateHeroku extends Component {
    this.createHerokuDeployment = this.createHerokuDeployment.bind(this);
    this.HerokuBuildUpdate = this.HerokuBuildUpdate.bind(this);
    this.launchHerokuDeployment = this.launchHerokuDeployment.bind(this);
+   this.getHeroku = this.getHeroku.bind(this);
+   this.addChallenges = this.addChallenges.bind(this);
 
     this.state = {
       userid: '',
@@ -20,7 +22,9 @@ class CreateHeroku extends Component {
       setupID: '',
       isBuilding: false,
       appName: '',
-      url: null
+      url: null,
+      interval: '',
+      herokuChallenges: []
     };
   }
 
@@ -40,7 +44,41 @@ class CreateHeroku extends Component {
         .catch((error) => {
           console.log(error);
         })
+
+        if(this.state.isBuilding){
+          this.setState({
+          interval: setInterval(this.HerokuBuildUpdate,10000)
+          })
+
+        }
+
     }
+
+  componentWillUnmount(){
+    clearInterval(this.state.interval)
+  }
+
+  getHeroku(){
+    axios.get(this.state.url+'/api/challenges')
+    .then(response => {
+        this.setState({
+          herokuChallenges: response.data.data
+        })
+        console.log(this.state.herokuChallenges);
+        this.addChallenges();
+      })
+  }
+
+  addChallenges(){
+    for(var i = 0; i < this.state.herokuChallenges.length; i++){
+      axios.post('http://localhost:5000/users/addChallenge/'+this.props.auth.user.id,{
+              challengeName: this.state.herokuChallenges[i].name,
+              challengeSuccess: this.state.herokuChallenges[i].solved
+            })
+            .then(res => {console.log(res)})
+      }
+  }
+
 
 
   createHerokuDeployment(){
@@ -49,7 +87,7 @@ class CreateHeroku extends Component {
         this.setState({
           isBuilding: true,
           setupID: response.data.id,
-          appName: response.data.app.name 
+          url: "https://"+response.data.app.name+".herokuapp.com"
         })
 
         axios.post('http://localhost:5000/users/isBuilding/'+this.state.userid,
@@ -59,13 +97,17 @@ class CreateHeroku extends Component {
         {'setupID': this.state.setupID})
 
         axios.post('http://localhost:5000/users/userURL/'+this.state.userid,
-        {'url': "https://"+this.state.appName+".herokuapp.com"})
-
+        {'url': this.state.url})
+          
      
     })
     .catch((error) => {
       console.log(error);
     }) 
+
+    this.setState({
+      interval: setInterval(this.HerokuBuildUpdate,10000)
+      })
      
   }
       
@@ -73,19 +115,24 @@ HerokuBuildUpdate(){
 
   axios.get('http://localhost:5000/heroku/isBuilding/'+this.state.setupID)
       .then(response => {
-        console.log(response.data.status)
-        if(response.data.status == "succeeded"){
+        //console.log(response)
+        if(response.data.status === "succeeded"){
+          clearInterval(this.state.interval);
+
           this.setState({
           isBuilding: false
           })
-          
+
+          console.log('success')
           axios.post('http://localhost:5000/users/isBuilding/'+this.state.userid,
           {'isBuilding': this.state.isBuilding})
+          .then(this.getHeroku())
+          
 
         }
 
-        else if(response.data.status == "pending"){
-          setTimeout(this.HerokuBuildUpdate,5000);
+        else if(response.data.status === "pending"){
+          console.log('pending')
         }
       
       })
@@ -100,7 +147,7 @@ launchHerokuDeployment(){
 render() {
   
  const renderBuildButton = () => {
-      if((this.state.url == null) && (!this.state.isBuilding)){
+      if(this.state.url == null){
       return <Button variant="contained" color="primary" onClick={this.createHerokuDeployment} disabled={this.state.isBuilding}>
         Build Heroku
         </Button>;}
@@ -111,7 +158,6 @@ render() {
         </Button>;}
 
       else if(!this.state.isBuilding){
-        
         return <Button variant="contained" color="secondary" onClick={this.launchHerokuDeployment}>
         Launch Heroku
         </Button>;
