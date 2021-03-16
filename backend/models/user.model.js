@@ -38,7 +38,6 @@ const UserSchema = new Schema({
   url: {
     type: String,
     required: false,
-    unique: true,
     trim: true,
     minlength: 3
   },

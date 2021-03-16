@@ -33,6 +33,7 @@ class CreateHeroku extends Component {
   componentDidMount() {
       axios.get('http://localhost:5000/users/id/'+this.props.auth.user.id)
         .then(response => {
+          
             this.setState({
               username: response.data.username,
               userid: response.data._id,
@@ -40,17 +41,17 @@ class CreateHeroku extends Component {
               isBuilding: response.data.isBuilding,
               setupID: response.data.setupID
             })
+
+            if(this.state.isBuilding){
+              this.setState({
+              interval: setInterval(this.HerokuBuildUpdate,2000)
+              })
+    
+            }
         })
         .catch((error) => {
           console.log(error);
         })
-
-        if(this.state.isBuilding){
-          this.setState({
-          interval: setInterval(this.HerokuBuildUpdate,10000)
-          })
-
-        }
 
     }
 
@@ -73,7 +74,8 @@ class CreateHeroku extends Component {
     for(var i = 0; i < this.state.herokuChallenges.length; i++){
       axios.post('http://localhost:5000/users/addChallenge/'+this.props.auth.user.id,{
               challengeName: this.state.herokuChallenges[i].name,
-              challengeSuccess: this.state.herokuChallenges[i].solved
+              challengeSuccess: this.state.herokuChallenges[i].solved,
+              challengeDescription: this.state.herokuChallenges[i].description
             })
             .then(res => {console.log(res)})
       }
@@ -106,7 +108,7 @@ class CreateHeroku extends Component {
     }) 
 
     this.setState({
-      interval: setInterval(this.HerokuBuildUpdate,10000)
+      interval: setInterval(this.HerokuBuildUpdate,30000)
       })
      
   }
@@ -124,6 +126,7 @@ HerokuBuildUpdate(){
           })
 
           console.log('success')
+
           axios.post('http://localhost:5000/users/isBuilding/'+this.state.userid,
           {'isBuilding': this.state.isBuilding})
           .then(this.getHeroku())
@@ -149,25 +152,26 @@ render() {
  const renderBuildButton = () => {
       if(this.state.url == null){
       return <Button variant="contained" color="primary" onClick={this.createHerokuDeployment} disabled={this.state.isBuilding}>
-        Build Heroku
+        
+        Build GU Shop!
         </Button>;}
 
       else if(this.state.isBuilding){
-      return <Button variant="contained" color="secondary"><CircularProgress color="primary" />
-        Building Heroku
+      return <Button variant="contained" color="primary"> 
+      <CircularProgress size="25px" color="secondary"/> 
+        Building GU Shop!
         </Button>;}
 
       else if(!this.state.isBuilding){
         return <Button variant="contained" color="secondary" onClick={this.launchHerokuDeployment}>
-        Launch Heroku
-        </Button>;
-      }
+        Get Hacking!
+        </Button>;}
     }
 
 return (
-      <div>
+      <span>
           {renderBuildButton()}
-      </div>
+      </span>
     )
 }
 }

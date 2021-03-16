@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { loginUser } from "../actions/authActions";
 import classnames from "classnames";
+import { Button, TextField } from '@material-ui/core';
 
 class Login extends Component {
   constructor() {
@@ -17,14 +18,21 @@ class Login extends Component {
 
   componentDidMount() {
     // If logged in and user navigates to Login page, should redirect them to dashboard
-    if (this.props.auth.isAuthenticated) {
-      this.props.history.push("/dashboard");
+    if (this.props.auth.user.isAdmin){
+      this.props.history.push("/adminDashboard");
+    }
+
+    else if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/Dashboard");
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.auth.isAuthenticated) {
-      this.props.history.push("/dashboard"); // push user to dashboard when they login
+    if (nextProps.auth.isAuthenticated && (nextProps.auth.user.isAdmin)){
+      this.props.history.push("/adminDashboard");
+    }
+    else if (nextProps.auth.isAuthenticated) {
+      this.props.history.push("/Dashboard"); // push user to dashboard when they login
     }
 if (nextProps.errors) {
       this.setState({
@@ -53,56 +61,72 @@ const userData = {
 
 render() {
     const { errors } = this.state;
+    var emailError = false;
+    var passwordError = false;
+  
+    if(errors.email || errors.emailnotfound){emailError = true}
+    if(errors.password || errors.passwordincorrect){passwordError = true}
+
+    const loginStyle = {
+      paddingTop: "30px"
+    };
+
 return (
       <div>
             <div>
-              <h4>
+              <h1>
+                <b>Welcome To the GU Hackathon!</b> 
+              </h1>
+              <h3>
                 <b>Login below</b> 
-              </h4>
+              </h3>
             </div>
             <form noValidate onSubmit={this.onSubmit}>
               <div className="input-field col s12">
-                <input
+                <TextField
                   onChange={this.onChange}
                   value={this.state.email}
-                  error={errors.email}
+                  error={emailError}
+                  helperText={errors.email || errors.emailnotfound}
                   id="email"
                   type="email"
+                  label="Email"
+                  
                   className={classnames("", {
                     invalid: errors.email || errors.emailnotfound
                   })}
                 />
-                <label htmlFor="email">Email</label>
-                <span className="red-text">
-                  {errors.email}
-                  {errors.emailnotfound}
-                </span>
+                
+                
               </div>
+              
+
               <div className="input-field col s12">
-                <input
+                <TextField
                   onChange={this.onChange}
                   value={this.state.password}
-                  error={errors.password}
+                  error={passwordError}
+                  helperText={errors.password || errors.passwordincorrect}
                   id="password"
                   type="password"
+                  label="Password"
                   className={classnames("", {
                     invalid: errors.password || errors.passwordincorrect
                   })}
                 />
-                <label htmlFor="password">Password</label>
-                <span>
-                  {errors.password}
-                  {errors.passwordincorrect}
-                </span>
               </div>
-              <div>
-                <button>
+
+              
+              
+              
+              <div style={loginStyle}>
+                <Button variant="contained" color="primary" type="submit">
                   Login
-                </button>
+                </Button>
 
                 <p className="grey-text text-darken-1">
                 Don't have an account? <Link to="/register">Register</Link>
-              </p>
+              </p> 
               </div>
             </form>
           </div>

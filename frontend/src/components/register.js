@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { registerUser } from "../actions/authActions";
 import classnames from "classnames";
+import { Button, TextField } from '@material-ui/core';
 
 class Register extends Component {
   constructor() {
@@ -29,12 +30,14 @@ componentWillReceiveProps(nextProps) {
       this.setState({
         errors: nextProps.errors
       });
+      
     }
   }
 
 onChange = e => {
     this.setState({ [e.target.id]: e.target.value });
   };
+
 onSubmit = e => {
     e.preventDefault();
 const newUser = {
@@ -50,89 +53,101 @@ this.props.registerUser(newUser, this.props.history);
   };
 render() {
     const { errors } = this.state;
+    var nameError = false;
+    var emailError = false;
+    var passwordError = false;
+    var passwordError2 = false;
+
+    if(errors.name){nameError = true}
+    if(errors.email){emailError = true}
+    if(errors.password){passwordError = true}
+    if(errors.password2){passwordError2 = true}
+
+    const registerStyle = {
+      paddingTop: "30px"
+    };
+
 return (
       <div>
         <div>
           <div>
             <div>
-              <h4>
+              <h3>
                 <b>Register</b> below
-              </h4>
-              <p>
-                Already have an account? <Link to="/login">Log in</Link>
-              </p>
+              </h3>
+
             </div>
             <form noValidate onSubmit={this.onSubmit}>
               <div>
-                <input
+              <TextField
                   onChange={this.onChange}
                   value={this.state.name}
-                  error={errors.name}
+                  error={nameError}
+                  helperText={errors.name}
                   id="name"
                   type="text"
+                  label="Name"
                   className={classnames("", {
                     invalid: errors.name
                   })}
                 />
-                <label htmlFor="name">Name</label>
-                <span className="red-text">{errors.name}</span>
               </div>
+
               <div>
-                <input
+                <TextField
                   onChange={this.onChange}
                   value={this.state.email}
-                  error={errors.email}
+                  error={emailError}
+                  helperText={errors.email}
                   id="email"
                   type="email"
+                  label="Email"
                   className={classnames("", {
                     invalid: errors.email
                   })}
                 />
-                <label htmlFor="email">Email</label>
-                <span>{errors.email}</span>
               </div>
+
               <div>
-                <input
+                <TextField
                   onChange={this.onChange}
                   value={this.state.password}
-                  error={errors.password}
+                  error={passwordError}
+                  helperText={errors.password}
                   id="password"
                   type="password"
+                  label="Password"
                   className={classnames("", {
                   invalid: errors.password
                   })}
                 />
-                <label htmlFor="password">Password</label>
-                <span>{errors.password}</span>
               </div>
+
               <div>
-                <input
+                <TextField
                   onChange={this.onChange}
                   value={this.state.password2}
-                  error={errors.password2}
+                  error={passwordError2}
+                  helperText={errors.password2}
                   id="password2"
                   type="password"
+                  label="Re-Enter Password"
                   className={classnames("", {
                     invalid: errors.password2
                   })}
                 />
-                <label htmlFor="password2">Confirm Password</label>
-                <span>{errors.password2}</span>
               </div>
-              <div>
-                <button
-                  style={{
-                    width: "150px",
-                    borderRadius: "3px",
-                    letterSpacing: "1.5px",
-                    marginTop: "1rem"
-                  }}
-                  type="submit"
-                  className="btn btn-large waves-effect waves-light hoverable blue accent-3"
-                >
+
+              <div style={registerStyle}>
+                <Button variant="contained" color="primary" type="submit">
                   Sign up
-                </button>
+                </Button>
               </div>
+
+              <p>
+                Already have an account? <Link to="/">Log in</Link>
+              </p>
+
             </form>
           </div>
         </div>

@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 
 const challengeSchema = new Schema({
   challengeName: String,
-  challengeSuccess: Boolean
+  challengeSuccess: Boolean,
+  challengeDescription: String
 })
 
 const Challenge = mongoose.model('Challenge', challengeSchema);

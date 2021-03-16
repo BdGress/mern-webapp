@@ -12,6 +12,7 @@ class GetChallenges extends Component {
     this.getHeroku = this.getHeroku.bind(this);
     this.updateChallenges = this.updateChallenges.bind(this);
     this.addChallenges = this.addChallenges.bind(this);
+    this.getUrl = this.getUrl.bind(this);
 
     this.state = {
       userID: '',
@@ -24,7 +25,6 @@ class GetChallenges extends Component {
   }
 
   componentDidMount() {
-
     axios.get('http://localhost:5000/users/ID/'+this.props.auth.user.id)
       .then(response => {
           this.setState({
@@ -37,7 +37,23 @@ class GetChallenges extends Component {
 
   }
 
+  getUrl(){
+    console.log(this.state.userID)
+    axios.get('http://localhost:5000/users/ID/'+this.props.auth.user.id)
+      .then(response => {
+          this.setState({
+              url: response.data.url
+          })
+          this.getHeroku();
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+  }
+
   getHeroku(){
+
     axios.get(this.state.url+'/api/challenges')
     .then(response => {
         this.setState({
@@ -49,10 +65,13 @@ class GetChallenges extends Component {
   }
 
   addChallenges(){
+    //console.log(this.state.herokuChallenges)
     for(var i = 0; i < this.state.herokuChallenges.length; i++){
       axios.post('http://localhost:5000/users/addChallenge/'+this.props.auth.user.id,{
               challengeName: this.state.herokuChallenges[i].name,
-              challengeSuccess: this.state.herokuChallenges[i].solved
+              challengeSuccess: this.state.herokuChallenges[i].solved,
+              challengeDescription: this.state.herokuChallenges[i].description
+              
             })
             .then(res => {console.log(res)})
       }
@@ -62,16 +81,17 @@ class GetChallenges extends Component {
     for(var i = 0; i < this.state.herokuChallenges.length; i++){
           axios.post('http://localhost:5000/users/updateChallenge/'+this.props.auth.user.id,{
           challengeName: this.state.herokuChallenges[i].name,
-          challengeSuccess: this.state.herokuChallenges[i].solved
+          challengeSuccess: this.state.herokuChallenges[i].solved,
+          challengeDescription: this.state.herokuChallenges[i].description
         })
       }
     }
     
   render() {
     return (
-    <div>
-      <Button variant="contained" color="secondary" onClick={this.getHeroku}>Update Challenges</Button>
-    </div>
+    <span>
+      <Button variant="contained" color="primary" onClick={this.getUrl}>Update</Button>
+    </span>
     )
   }
 }

@@ -12,7 +12,9 @@ import Navbar from "./components/navbar";
 import Register from "./components/register";
 import Login from "./components/login";
 import PrivateRoute from "./components/privateRoute";
+import AdminRoute from "./components/adminRoute";
 import Dashboard from "./components/dashboard";
+import adminDashboard from "./components/adminDashboard";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -43,8 +45,11 @@ class App extends Component {
             <Route exact path="/" component={Login} />
             <Route exact path="/register" component={Register} />
             
+            
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              <AdminRoute exact path="/adminDashboard" component={adminDashboard} />
+              
             </Switch>
           </div>
         </Router>

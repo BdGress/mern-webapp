@@ -5,8 +5,11 @@ const keys = require("../config/keys");
 let User = require('../models/user.model');
 let Challenge = require('../models/challenge.model');
 
+const Heroku = require('heroku-client')
+const heroku = new Heroku({ token: 'a53d4fa8-2d50-4897-aa8d-dc3dde79b52d' })
 
 const auth = require('../middleware/auth');
+const adminAuth = require('../middleware/adminAuth');
 
 
 // Load input validation
@@ -28,6 +31,32 @@ router.get('/',auth,function(req,res) {
     .then(users => res.json(users))
     .catch(err => res.status(400).json('Error: ' + err));
 });
+
+//Delete specific user and Heroku APP by User objectID
+  router.delete('/delete/:id',adminAuth,function(req,res){
+
+    //Delete Heroku App
+    User.findById(req.params.id)
+    .then(users => {
+        heroku.get('/app-setups/'+users.setupID)
+        .then(HerokuResponse => {
+
+          heroku.delete('/apps/'+HerokuResponse.app.name)
+
+        })
+        .catch(err => res.status(400).json('Error: ' + err))
+      });
+
+    //Delete User from MongoDB
+    User.findOneAndDelete({_id: req.params.id}, function (err, docs) { 
+      if (err){ 
+          console.log(err) 
+      } 
+      else{ 
+          console.log("Deleted User"); 
+      }
+  }); 
+})
 
 //get challenges from specific user by Name
 //router.route('/name/:name').get((req, res) => {
@@ -82,13 +111,15 @@ router.get('/',auth,function(req,res) {
 
     const challengeName = req.body.challengeName;
     const challengeSuccess = req.body.challengeSuccess;
+    const challengeDescription = req.body.challengeDescription;
 
     challengeArray = user.challenges.map(challenge => challenge.challengeName)
 
     if(!(challengeArray.includes(challengeName))){
       user.challenges.push(new Challenge ({
         challengeName: challengeName,
-        challengeSuccess: challengeSuccess
+        challengeSuccess: challengeSuccess,
+        challengeDescription: challengeDescription
       }))
     
       user.save()
@@ -115,6 +146,7 @@ router.get('/',auth,function(req,res) {
       if(user.challenges[i].challengeName == req.body.challengeName){
          
           user.challenges[i].challengeSuccess = req.body.challengeSuccess
+          user.challenges[i].challengeDescription = req.body.challengeDescription
       
           user.save()
               .then(() => res.json('Challenge Updated!'))
@@ -141,9 +173,7 @@ router.get('/',auth,function(req,res) {
   .catch(err => res.status(400).json('Error: '+ err));
 });
 
-// @route POST users/register
-// @desc Register user
-// @access Public
+//Register User
 router.post("/register", (req, res) => {
   // Form validation
 const { errors, isValid } = validateRegisterInput(req.body);
@@ -175,10 +205,9 @@ User.findOne({ email: req.body.email }).then(user => {
   });
 });
 
-// @route POST api/users/login
-// @desc Login user and return JWT token
-// @access Public
+// Login User
 router.post("/login", (req, res) => {
+var isAdmin = false;
   // Form validation
 const { errors, isValid } = validateLoginInput(req.body);
 // Check validation
@@ -193,6 +222,10 @@ const email = req.body.email;
     if (!user) {
       return res.status(404).json({ emailnotfound: "Email not found" });
     }
+    else if(user.username === 'Admin'){
+      isAdmin = true;
+    }
+
 // Check password
     bcrypt.compare(password, user.password).then(isMatch => {
       if (isMatch) {
@@ -200,7 +233,8 @@ const email = req.body.email;
         // Create JWT Payload
         const payload = {
           id: user.id,
-          name: user.name
+          name: user.name,
+          isAdmin: isAdmin
         };
 // Sign token
         jwt.sign(

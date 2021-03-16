@@ -4,14 +4,11 @@ import axios from "axios";
 import { connect } from "react-redux";
 import { logoutUser } from "../actions/authActions";
 import { Button } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
 
-import CreateHeroku from './createheroku';
-import GetChallenges from './getchallenges';
-import ChallengeTable from './challengeTable';
+import AdminTable from "./adminTable";
 
 
-class Dashboard extends Component {
+class adminDashboard extends Component {
   constructor(props) {
     super(props);
 
@@ -22,6 +19,7 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props.auth)
     axios.get('http://localhost:5000/users/id/'+this.props.auth.user.id)
       .then(response => {
           this.setState({
@@ -53,36 +51,13 @@ return (
         <div className="row">
           <div className="col s12 center-align">
             <h4>
-              <b>Hey there, {this.state.username} !</b> 
+              <b>Hey there, {this.state.username} ! </b> 
             </h4>
-          <ChallengeTable />
 
-          <React.Fragment>
-  
-          <Box display="flex">
-
-            <Box>
-              <CreateHeroku />
-            </Box>
-
-            <Box flexGrow={1}>
-              <GetChallenges />
-            </Box> 
-
-            <Box>
-              <Button variant="contained" color="secondary" onClick={this.onLogoutClick}>
-              Logout
-              </Button>  
-            </Box>
-
-          </Box>
-      
-          </React.Fragment>
-
-          
-
-          
-          
+            <AdminTable />
+          <Button variant="contained" color="primary" onClick={this.onLogoutClick}>
+            Logout
+          </Button>
 
           </div>
         </div>
@@ -91,17 +66,16 @@ return (
 }
 }
 
+adminDashboard.propTypes = {
+    logoutUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired
+  };
+  const mapStateToProps = state => ({
+    auth: state.auth
+  });
 
-
-Dashboard.propTypes = {
-  logoutUser: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
-};
-const mapStateToProps = state => ({
-  auth: state.auth
-});
 
 export default connect(
   mapStateToProps,
   { logoutUser }
-)(Dashboard);
+)(adminDashboard);

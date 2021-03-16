@@ -7,9 +7,14 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+
+
+
+
 
 class ChallengeTable extends Component {
     constructor(props) {
@@ -19,33 +24,32 @@ class ChallengeTable extends Component {
      
 
       this.state = {
-        rows: [],
-        interval: ''
+        row: [],
+        interval: " ",
+        isBuilding: " ",
+        url: " "
       };
     }
 
     componentDidMount() {
-        this.getData();
-
-        this.setState({
-
-        interval: setInterval(() => {
-            this.getData();
-          }, 20000)
-
+     
+      this.setState({
+        interval: setInterval(this.getData,3000)
         })
-      }
+          
+    }
 
-      componentWillUnmount() {
-          clearInterval(this.state.interval);
+    componentWillUnmount(){
+      clearInterval(this.state.interval)
     }
 
  getData(){
     axios.get('http://localhost:5000/users/getChallenges/'+this.props.auth.user.id)
       .then(response =>{
         this.setState({
-            rows: response.data
+            row: response.data
           })
+        
      })
   }
 
@@ -55,28 +59,34 @@ class ChallengeTable extends Component {
 
 
 render() {
-   const rows = this.state.rows;
+
 
   return (
   
-    <div>
-    <TableContainer>
-      <Table>
+<div>
+<TableContainer>
+      <Table aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>Challenge Name</TableCell>
+            <TableCell>Description</TableCell>
             <TableCell>Solved</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row,index) => (
-            <TableRow key={row._id}>
-                <TableCell>
+          {this.state.row.map((row) => (
+            <TableRow key={row._id} style ={ row.challengeSuccess == true ? { background : "green" }:{ background : "white" }}>
+              <TableCell component="th" scope="row">
                 {row.challengeName}
-                </TableCell>
-                <TableCell>
-                    {row.challengeSuccess.toString()}
-                </TableCell>
+              </TableCell>
+  
+              <TableCell component="th" scope="row">
+                {String(row.challengeDescription)}
+              </TableCell>
+
+              <TableCell component="th" scope="row">
+                {String(row.challengeSuccess)}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

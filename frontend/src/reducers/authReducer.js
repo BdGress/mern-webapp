@@ -6,7 +6,8 @@ import {
   const initialState = {
     isAuthenticated: false,
     user: {},
-    loading: false
+    loading: false,
+    isAdmin: false
   };
   export default function(state = initialState, action) {
     switch (action.type) {
@@ -14,7 +15,8 @@ import {
         return {
           ...state,
           isAuthenticated: !isEmpty(action.payload),
-          user: action.payload
+          user: action.payload,
+          isAdmin: !isEmpty(action.payload)
         };
       case USER_LOADING:
         return {
