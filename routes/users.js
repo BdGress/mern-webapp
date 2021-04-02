@@ -11,6 +11,8 @@ const heroku = new Heroku({ token: process.env.HEROKUTOKEN })
 const auth = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
 
+const secret = process.env.SECRET || "secret";
+
 
 // Load input validation
 const validateRegisterInput = require("../validation/register");
@@ -239,7 +241,7 @@ const email = req.body.email;
 // Sign token
         jwt.sign(
           payload,
-          process.env.SECRET,
+          secret,
           {
             expiresIn: 31556926 // 1 year in seconds
           },
