@@ -2,7 +2,8 @@ const router = require('express').Router();
 
 
 const Heroku = require('heroku-client')
-const heroku = new Heroku({ token: 'a53d4fa8-2d50-4897-aa8d-dc3dde79b52d' })
+//const heroku = new Heroku({ token: 'a53d4fa8-2d50-4897-aa8d-dc3dde79b52d' })
+const heroku = new Heroku({ token: process.env.HEROKUTOKEN })
 
 const auth = require('../middleware/auth');
 

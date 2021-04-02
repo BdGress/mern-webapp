@@ -8,7 +8,8 @@ const passport = require("passport");
 
 
 // DB Config
-const db = require("./config/keys").mongoURI;
+//const db = require("./config/keys").mongoURI;
+const db = process.env.MONGOURI;
 
 const app = express();
 
