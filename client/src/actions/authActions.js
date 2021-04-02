@@ -14,7 +14,7 @@ import {
 // Register User
 export const registerUser = (userData, history) => dispatch => {
   axios
-    .post("http://localhost:5000/users/register", userData)
+    .post("/users/register", userData)
     .then(res => history.push("/")) // re-direct to login on successful register
     .catch(err =>
       dispatch({
@@ -29,7 +29,7 @@ export const registerUser = (userData, history) => dispatch => {
 // Login - get user token
 export const loginUser = userData => dispatch => {
   axios
-    .post("http://localhost:5000/users/login", userData)
+    .post("/users/login", userData)
     .then(res => {
       // Save to localStorage
 // Set token to localStorage
