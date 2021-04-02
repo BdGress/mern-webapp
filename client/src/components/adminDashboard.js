@@ -20,7 +20,7 @@ class adminDashboard extends Component {
 
   componentDidMount() {
     console.log(this.props.auth)
-    axios.get('http://localhost:5000/users/id/'+this.props.auth.user.id)
+    axios.get('/users/id/'+this.props.auth.user.id)
       .then(response => {
           this.setState({
             username: response.data.username,

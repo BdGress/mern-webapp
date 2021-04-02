@@ -22,7 +22,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 function deleteUser(id){
     console.log(id)
 
-    axios.delete('http://localhost:5000/users/delete/'+id)
+    axios.delete('/users/delete/'+id)
       .then(response =>{
           console.log(response)
 
@@ -128,7 +128,7 @@ useRowStyles = makeStyles({
 });
 
 getData(){
-    axios.get('http://localhost:5000/users/')
+    axios.get('/users/')
       .then(response =>{
         this.setState({
             rows: response.data

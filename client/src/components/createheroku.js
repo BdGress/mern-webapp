@@ -72,7 +72,7 @@ class CreateHeroku extends Component {
 
   addChallenges(){
     for(var i = 0; i < this.state.herokuChallenges.length; i++){
-      axios.post('http://localhost:5000/users/addChallenge/'+this.props.auth.user.id,{
+      axios.post('/users/addChallenge/'+this.props.auth.user.id,{
               challengeName: this.state.herokuChallenges[i].name,
               challengeSuccess: this.state.herokuChallenges[i].solved,
               challengeDescription: this.state.herokuChallenges[i].description
@@ -84,7 +84,7 @@ class CreateHeroku extends Component {
 
 
   createHerokuDeployment(){
-    axios.get('http://localhost:5000/heroku/build')
+    axios.get('/heroku/build')
       .then(response => {
         this.setState({
           isBuilding: true,
@@ -92,13 +92,13 @@ class CreateHeroku extends Component {
           url: "https://"+response.data.app.name+".herokuapp.com"
         })
 
-        axios.post('http://localhost:5000/users/isBuilding/'+this.state.userid,
+        axios.post('/users/isBuilding/'+this.state.userid,
         {'isBuilding': this.state.isBuilding})
 
-        axios.post('http://localhost:5000/users/setupID/'+this.state.userid,
+        axios.post('/users/setupID/'+this.state.userid,
         {'setupID': this.state.setupID})
 
-        axios.post('http://localhost:5000/users/userURL/'+this.state.userid,
+        axios.post('/users/userURL/'+this.state.userid,
         {'url': this.state.url})
           
      
@@ -115,7 +115,7 @@ class CreateHeroku extends Component {
       
 HerokuBuildUpdate(){
 
-  axios.get('http://localhost:5000/heroku/isBuilding/'+this.state.setupID)
+  axios.get('/heroku/isBuilding/'+this.state.setupID)
       .then(response => {
         //console.log(response)
         if(response.data.status === "succeeded"){
@@ -127,7 +127,7 @@ HerokuBuildUpdate(){
 
           console.log('success')
 
-          axios.post('http://localhost:5000/users/isBuilding/'+this.state.userid,
+          axios.post('/users/isBuilding/'+this.state.userid,
           {'isBuilding': this.state.isBuilding})
           .then(this.getHeroku())
           

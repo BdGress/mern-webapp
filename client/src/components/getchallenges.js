@@ -25,7 +25,7 @@ class GetChallenges extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:5000/users/ID/'+this.props.auth.user.id)
+    axios.get('/users/ID/'+this.props.auth.user.id)
       .then(response => {
           this.setState({
               url: response.data.url
@@ -39,7 +39,7 @@ class GetChallenges extends Component {
 
   getUrl(){
     console.log(this.state.userID)
-    axios.get('http://localhost:5000/users/ID/'+this.props.auth.user.id)
+    axios.get('/users/ID/'+this.props.auth.user.id)
       .then(response => {
           this.setState({
               url: response.data.url
@@ -67,7 +67,7 @@ class GetChallenges extends Component {
   addChallenges(){
     //console.log(this.state.herokuChallenges)
     for(var i = 0; i < this.state.herokuChallenges.length; i++){
-      axios.post('http://localhost:5000/users/addChallenge/'+this.props.auth.user.id,{
+      axios.post('/users/addChallenge/'+this.props.auth.user.id,{
               challengeName: this.state.herokuChallenges[i].name,
               challengeSuccess: this.state.herokuChallenges[i].solved,
               challengeDescription: this.state.herokuChallenges[i].description
@@ -79,7 +79,7 @@ class GetChallenges extends Component {
 
   updateChallenges(){
     for(var i = 0; i < this.state.herokuChallenges.length; i++){
-          axios.post('http://localhost:5000/users/updateChallenge/'+this.props.auth.user.id,{
+          axios.post('/users/updateChallenge/'+this.props.auth.user.id,{
           challengeName: this.state.herokuChallenges[i].name,
           challengeSuccess: this.state.herokuChallenges[i].solved,
           challengeDescription: this.state.herokuChallenges[i].description

@@ -44,7 +44,7 @@ class ChallengeTable extends Component {
     }
 
  getData(){
-    axios.get('http://localhost:5000/users/getChallenges/'+this.props.auth.user.id)
+    axios.get('/users/getChallenges/'+this.props.auth.user.id)
       .then(response =>{
         this.setState({
             row: response.data

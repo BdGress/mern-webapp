@@ -22,7 +22,7 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:5000/users/id/'+this.props.auth.user.id)
+    axios.get('/users/id/'+this.props.auth.user.id)
       .then(response => {
           this.setState({
             username: response.data.username,
