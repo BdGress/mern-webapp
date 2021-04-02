@@ -75,7 +75,7 @@ return (
       <div>
             <div>
               <h1>
-                <b>Welcome To the GU Hackathon!</b> 
+                <b>Welcome to the GU Hackathon!</b> 
               </h1>
               <h3>
                 <b>Login below</b> 

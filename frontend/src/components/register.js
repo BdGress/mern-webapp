@@ -86,7 +86,7 @@ return (
                   helperText={errors.name}
                   id="name"
                   type="text"
-                  label="Name"
+                  label="Participant Name"
                   className={classnames("", {
                     invalid: errors.name
                   })}
