@@ -8,7 +8,7 @@ const passport = require("passport");
 
 
 // DB Config
-const db = require("./config/keys").mongoURI;
+const db = process.env.MONGODB_URI;
 
 const app = express();
 
