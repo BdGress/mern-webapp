@@ -239,7 +239,7 @@ const email = req.body.email;
 // Sign token
         jwt.sign(
           payload,
-          keys.secretOrKey,
+          process.env.SECRET,
           {
             expiresIn: 31556926 // 1 year in seconds
           },
